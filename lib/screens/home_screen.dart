@@ -6,6 +6,7 @@ import '../providers/auth_provider.dart';
 import '../providers/data_provider.dart';
 import '../providers/notes_provider.dart';
 import 'platform_channel_screen.dart';
+import 'note_editor_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,84 +53,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _showNoteDialog({NoteModel? note}) async {
-    final titleController = TextEditingController(text: note?.title ?? '');
-    final contentController = TextEditingController(text: note?.content ?? '');
-
-    final result = await showDialog<bool>(
+    final result = await showDialog<NoteEditorResult>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(note == null ? 'Tambah Catatan' : 'Edit Catatan'),
-          content: SizedBox(
-            width: 420,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Judul',
-                    hintText: 'Contoh: Belanja',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: contentController,
-                  minLines: 4,
-                  maxLines: 8,
-                  decoration: const InputDecoration(
-                    labelText: 'Isi Catatan',
-                    hintText: 'Tuliskan detail catatan Anda...',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Batal'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(note == null ? 'Simpan' : 'Update'),
-            ),
-          ],
-        );
-      },
+      builder: (_) => NoteEditorDialog(note: note),
     );
 
-    if (!mounted) {
-      titleController.dispose();
-      contentController.dispose();
-      return;
-    }
-
-    if (result != true) {
-      titleController.dispose();
-      contentController.dispose();
-      return;
-    }
-
-    final title = titleController.text.trim();
-    final content = contentController.text.trim();
-    titleController.dispose();
-    contentController.dispose();
+    if (!mounted || result == null) return;
 
     try {
       if (note == null) {
         await Provider.of<NotesProvider>(
           context,
           listen: false,
-        ).addNote(title: title, content: content);
+        ).addNote(title: result.title, content: result.content);
       } else {
         await Provider.of<NotesProvider>(
           context,
           listen: false,
-        ).updateNote(id: note.id, title: title, content: content);
+        ).updateNote(id: note.id, title: result.title, content: result.content);
       }
 
       if (!mounted) return;
