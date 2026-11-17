@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
+import '../validators/auth_validator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -80,20 +81,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    if (email.isEmpty) {
-      _showSnackBar('Silakan masukkan alamat email.');
+    final emailError = AuthValidator.validateEmail(email);
+    if (emailError != null) {
+      _showSnackBar(emailError);
       return;
     }
-    if (!email.contains('@') || !email.contains('.')) {
-      _showSnackBar('Format email tidak valid.');
-      return;
-    }
-    if (password.isEmpty) {
-      _showSnackBar('Silakan masukkan kata sandi.');
-      return;
-    }
-    if (password.length < 6) {
-      _showSnackBar('Kata sandi minimal 6 karakter.');
+    final passwordError = AuthValidator.validatePassword(password);
+    if (passwordError != null) {
+      _showSnackBar(passwordError);
       return;
     }
 
@@ -167,6 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       TextField(
+                        key: const ValueKey('emailField'),
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
@@ -178,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                       TextField(
+                        key: const ValueKey('passwordField'),
                         controller: _passwordController,
                         obscureText: _obscurePassword,
                         decoration: InputDecoration(
@@ -208,6 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
+                  key: const ValueKey('loginButton'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
