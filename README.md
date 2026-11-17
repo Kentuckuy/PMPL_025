@@ -1,155 +1,184 @@
-# Pemrograman Multi Platform Lanjutan (IT312)
+# NOTE FATHURRAHMAN — Aplikasi Catatan Multiplatform
 
-Repositori ini mendokumentasikan pengerjaan tugas, modul praktikum, dan proyek perkuliahan untuk mata kuliah **Pemrograman Multi Platform Lanjutan (IT312)** dengan memanfaatkan framework **Flutter** dan bahasa pemrograman **Dart**. Dokumentasi ini diperbarui secara berkala mengikuti perkembangan setiap pertemuan perkuliahan.
+Repositori ini berisi tugas dan praktikum mata kuliah **Pemrograman Multi Platform Lanjutan (IT312)**. Project dibuat dengan Flutter dan Dart. Versi utama di branch `main` adalah aplikasi catatan dengan autentikasi Firebase, penyimpanan Cloud Firestore, dan contoh integrasi fitur native Android melalui Platform Channel.
 
----
+Dokumentasi ini mencatat fitur yang benar-benar tersedia di source code dan branch praktikum. Saat ada materi, fitur, atau perubahan cara menjalankan aplikasi yang baru, bagian terkait di README ini perlu ikut diperbarui.
 
-## Daftar Pertemuan dan Progres
+## Status dan Materi Pertemuan
 
-| Pertemuan   | Topik Materi                                                                                 | Status  | Snapshot / Referensi                                                                                                                                               |
-| ----------- | -------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Pertemuan 1 | Review PMP Dasar, Asynchronous (Future, `async`/`await`), dan Dart Stream (`async*`/`yield`) | Selesai | [Branch pertemuan-1](https://github.com/faruuuu-14/PMPL_025/tree/pertemuan-1) / [Tag pertemuan-1](https://github.com/faruuuu-14/PMPL_025/releases/tag/pertemuan-1) |
-| Pertemuan 2 | REST API Deep Dive: Dio HTTP Client, UI State Management, dan Infinite Scroll Pagination     | Selesai | [Branch pertemuan-2](https://github.com/faruuuu-14/PMPL_025/tree/pertemuan-2) / [Tag pertemuan-2](https://github.com/faruuuu-14/PMPL_025/releases/tag/pertemuan-2) |
-| Pertemuan 3 | Provider, Simulasi Login, dan REST API Reqres.in                                             | Selesai | [Branch pertemuan-3](https://github.com/faruuuu-14/PMPL_025/tree/pertemuan-3) / [Tag pertemuan-3](https://github.com/faruuuu-14/PMPL_025/releases/tag/pertemuan-3) |
-| Pertemuan 4 | Firebase Authentication, Email & Password Auth, dan Auth State Listener dengan Provider     | Selesai | [Branch pertemuan-4](https://github.com/faruuuu-14/PMPL_025/tree/pertemuan-4) / [Tag pertemuan-4](https://github.com/faruuuu-14/PMPL_025/releases/tag/pertemuan-4) |
+| Pertemuan | Materi | Implementasi yang tersedia | Arsip |
+|---|---|---|---|
+| 1 | Dart asynchronous: `Future`, `async`/`await`, dan `Stream` | Simulasi proses sinkron/asinkron dan aliran data dengan `StreamBuilder` | [Branch pertemuan-1](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-1) |
+| 2 | REST API, Dio, state UI, dan pagination | Mengambil daftar post dari JSONPlaceholder, menangani loading/error/empty, serta infinite scroll | [Branch pertemuan-2](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-2) |
+| 3 | Provider, pemisahan state, dan REST API Reqres | Login demo, `MultiProvider`, model pengguna, dan pemuatan daftar pengguna | [Branch pertemuan-3](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-3) |
+| 4 | Firebase Authentication dan state autentikasi | Register, login, logout, `authStateChanges()`, serta pemetaan error Firebase | [Branch pertemuan-4](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-4) |
+| 6 | Cloud Firestore realtime | CRUD catatan dan pembaruan daftar melalui snapshot stream | [Branch pertemuan-6](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-6) |
+| 9 | Pengujian Flutter | Unit test, widget test, serta pengujian dengan fake service dan mock platform channel | [Branch pertemuan-9](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-9) |
+| 10 | Platform Channel | Komunikasi Flutter–Android untuk membaca baterai dan menampilkan Toast native | [Branch pertemuan-10](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-10) |
 
----
+Tabel di atas hanya mencantumkan materi yang memiliki implementasi atau arsip branch di repositori ini. Materi pertemuan lain dapat ditambahkan setelah kode atau dokumentasinya tersedia.
 
-## Rincian Modul Perkuliahan
+## Gambaran Aplikasi Saat Ini
 
-### Pertemuan 1 — Review PMP Dasar dan Dart Async
+Branch `main` menggabungkan aplikasi catatan dan materi praktikum sebelumnya.
 
-Fokus pembahasan pada pertemuan ini meliputi evaluasi pemahaman arsitektur dasar Flutter serta implementasi pemrosesan asinkronus untuk menjaga responsivitas antarmuka aplikasi (_User Interface_).
+- **Nama aplikasi Android:** `NOTE FATHURRAHMAN`.
+- **Autentikasi:** pengguna dapat membuat akun, masuk, dan keluar menggunakan email dan kata sandi Firebase Authentication.
+- **Navigasi autentikasi:** status sesi dipantau melalui `authStateChanges()`. Pengguna yang belum masuk melihat halaman login; setelah masuk, aplikasi menampilkan halaman catatan.
+- **Catatan:** pengguna dapat menambah, mengubah, dan menghapus catatan. Daftar diperbarui secara realtime dari Cloud Firestore dan diurutkan berdasarkan waktu terbaru.
+- **Platform Channel Android:** demo dapat dibuka dari halaman login atau dari halaman catatan. Demo membaca tingkat baterai dan mengirim pesan Toast dari Flutter ke Android.
+- **Materi API:** implementasi Dio, model pengguna, dan `DataProvider` dari praktikum REST API tetap tersedia sebagai materi pembelajaran. Alur utama branch `main` saat ini berfokus pada autentikasi dan catatan.
 
-- **Simulasi Synchronous (Blocking):**
-  Menggunakan `sleep()` untuk mendemonstrasikan pemblokiran pada _Main UI Thread_. Pemanggilan fungsi ini menyebabkan animasi indikator visual mengalami pembekuan (_freeze_) selama 3 detik.
-- **Simulasi Asynchronous (Non-Blocking):**
-  Menggunakan `await Future.delayed()` untuk mengalihkan proses intensif ke latar belakang (_background_), memastikan antarmuka pengguna tetap berjalan secara lancar tanpa hambatan.
-- **Dart Stream Realtime:**
-  Mengalirkan data sekuensial (angka 1 hingga 5) secara berkala tiap detik menggunakan generator `async*` dan `yield`, yang dipantau secara reaktif menggunakan widget `StreamBuilder`.
-- **Arsip Kode:**
-  Seluruh implementasi modul pertemuan 1 tersimpan secara mandiri pada [Branch pertemuan-1](https://github.com/faruuuu-14/PMPL_025/tree/pertemuan-1).
+### Catatan data dan Firebase
 
-### Pertemuan 2 — REST API Deep Dive: Dio, State Management, dan Pagination
+- Catatan disimpan pada koleksi Firestore `notes`, dengan field `title`, `content`, dan `createdAt`.
+- Implementasi saat ini belum menyimpan ID pemilik pada setiap catatan. Karena itu, catatan belum dipisahkan per akun; akses aktual bergantung pada Firestore Security Rules yang dipasang di project Firebase.
+- Aktifkan metode **Email/Password** di Firebase Authentication dan buat database Firestore sebelum menjalankan fitur terkait.
+- Atur Firestore Security Rules sesuai kebutuhan aplikasi dan wajibkan autentikasi untuk data pengguna. Jangan menggunakan aturan terbuka untuk deployment publik.
+- Konfigurasi Firebase platform berada di `lib/firebase_options.dart` dan `android/app/google-services.json`. Jika memakai project Firebase lain, buat ulang konfigurasi untuk project tersebut.
+- Bootstrap aplikasi mengatur `appVerificationDisabledForTesting`. Tinjau pengaturan ini sebelum penggunaan produksi.
 
-Fokus pembahasan pada pertemuan ini adalah integrasi jaringan tingkat lanjut menggunakan paket `Dio`, penanganan status tampilan antarmuka secara komprehensif, serta penerapan teknik _Infinite Scroll_.
+## Teknologi dan Struktur Kode
 
-- **Endpoint API:**
-  `https://jsonplaceholder.typicode.com/posts?_page={page}&_limit=10`
-- **Arsitektur dan Struktur Berkas:**
-  ```text
-  lib/
-  ├── main.dart             # Antarmuka Feed Berita, State Management, dan Infinite Scroll
-  ├── models/
-  │   └── post_model.dart   # Model Data PostModel dan Factory Constructor fromJson
-  └── services/
-      └── api_service.dart  # Konfigurasi Dio, BaseOptions, Interceptor, dan Error Handling
-  ```
-- **Komponen Teknis:**
-  - **Dio Client Setup:** Konfigurasi `BaseOptions` terpusat (`baseUrl`, batas waktu `connectTimeout` dan `receiveTimeout` selama 10 detik) serta aktivasi `LogInterceptor` untuk inspeksi jaringan.
-  - **Infinite Scroll Pagination:** Penggunaan `ScrollController` dengan pendeteksian ambang batas (200 piksel sebelum batas akhir) untuk memicu pemanggilan data halaman berikutnya secara otomatis.
-  - **Pola UI State Management:**
-    1. _Loading State:_ Menampilkan indikator proses saat pertama kali memuat data.
-    2. _Error State:_ Menangkap `DioException` dan memetakan kode status menjadi pesan kesalahan yang informatif dengan opsi _Coba Lagi_.
-    3. _Empty State:_ Tampilan notifikasi ketika respons data kosong.
-    4. _Success State:_ Penyajian data dalam bentuk kartu daftar dengan dukungan fitur pembaruan _Pull to Refresh_ (`RefreshIndicator`).
+- **Framework:** Flutter
+- **Bahasa:** Dart
+- **State management:** Provider
+- **Autentikasi dan database:** Firebase Authentication dan Cloud Firestore
+- **HTTP client untuk materi API:** Dio
+- **Platform native:** Android Kotlin dan Flutter `MethodChannel`
 
-### Pertemuan 3 — Provider, Simulasi Login, dan REST API Reqres.in
+```text
+lib/
+├── main.dart                         # Inisialisasi Firebase, provider, dan auth gating
+├── firebase_options.dart             # Konfigurasi Firebase untuk platform Flutter
+├── models/
+│   ├── note_model.dart               # Model catatan Firestore
+│   └── user_model.dart               # Model pengguna API
+├── providers/
+│   ├── auth_provider.dart            # State sesi autentikasi
+│   ├── data_provider.dart            # State data API latihan
+│   └── notes_provider.dart           # Stream dan operasi catatan
+├── repositories/
+│   └── auth_repository.dart          # Abstraksi alur autentikasi
+├── screens/
+│   ├── home_screen.dart              # Daftar catatan dan navigasi fitur
+│   ├── login_screen.dart             # Form login dan registrasi
+│   ├── note_editor_dialog.dart       # Dialog tambah/edit catatan
+│   └── platform_channel_screen.dart  # Demo fitur native Android
+├── services/
+│   ├── api_service.dart              # Klien Dio untuk API Reqres
+│   ├── auth_service.dart             # Layanan Firebase Authentication
+│   ├── firestore_service.dart        # Operasi Cloud Firestore
+│   └── platform_channel_service.dart # Pemanggilan MethodChannel
+├── theme/
+│   └── app_theme.dart                # Tema visual aplikasi
+└── validators/
+    └── auth_validator.dart           # Validasi email dan kata sandi
 
-Fokus pertemuan ini adalah pemisahan state autentikasi dan data menggunakan `Provider`, pemetaan JSON ke model, serta penanganan state loading, empty, dan error.
+android/app/src/main/kotlin/           # Implementasi native Android
+web/                                   # Konfigurasi aplikasi web/PWA
+test/                                  # Unit test dan widget test
+```
 
-- **Login Demo:** Email tidak boleh kosong dan password minimal 6 karakter. Proses login disimulasikan selama 1 detik; tidak memerlukan akun server.
-- **Endpoint API:** `https://reqres.in/api/users?page=1&per_page=10`, menggunakan header `x-api-key: reqres-free-v1`. Token login demo dipakai untuk state aplikasi, bukan dikirim sebagai header Bearer ke endpoint ini.
-- **Pemetaan Pengguna:** `UserModel.fromJson` membaca `id`, `email`, `first_name`, `last_name`, dan `avatar` dari objek `data` pada respons Reqres.in.
-- **State Data:** `DataProvider` mengelola `initial`, `loading`, `loaded`, `empty`, dan `error`, serta menyediakan pemuatan ulang melalui `RefreshIndicator`.
-- **Materi Lanjutan:** `ProxyProvider` diperkenalkan sebagai teaser untuk meneruskan perubahan token antar-provider; praktikum ini masih menggunakan `MultiProvider`.
+## Prasyarat
 
-### Pertemuan 4 — Firebase Authentication, Email & Password Auth, dan Provider State Gating
+- Flutter SDK **3.47.4 atau lebih baru** dan Dart SDK **3.13.3 atau kompatibel**.
+- Android Studio beserta Android SDK untuk menjalankan aplikasi di emulator atau perangkat Android.
+- Google Chrome atau Microsoft Edge untuk menjalankan aplikasi web.
+- Akses internet untuk mengakses Firebase dan API eksternal.
 
-Fokus praktikum pada pertemuan ini adalah merefaktor sistem autentikasi dari dummy token lokal menjadi integrasi penuh dengan **Cloud Firebase Authentication**, menangani pendaftaran (register), login, dan logout dengan email & password, mengolah pesan kesalahan autentikasi berbahasa Indonesia, serta menerapkan arsitektur *Auth Gating* berbasis `authStateChanges()` dan `Provider`.
+Periksa instalasi Flutter dan Android dengan:
 
-- **Skema Arsitektur & Auth Gating:**
-  - `UI Layer`: `LoginScreen` (toggle form Login & Register) dan router kondisional berbasis `Consumer<AuthProvider>`.
-  - `AuthProvider`: Menyimpan objek state aktif `User?` Firebase (bukan lagi dummy string) dan memicu `notifyListeners()`. Properti `isAuthenticated` dievaluasi dari `_user != null`. Properti `token` tetap mengembalikan identifier pengguna (`_user?.uid`) untuk menjaga kompatibilitas `HomeScreen` tanpa perlu modifikasi.
-  - `Firebase Auth Engine`: Menangani `createUserWithEmailAndPassword()` untuk pendaftaran dan `signInWithEmailAndPassword()` untuk login akun.
-  - `Realtime Session Listener`: `FirebaseAuth.instance.authStateChanges()` mendengarkan perubahan status login/logout secara langsung dan menyinkronkan state ke `AuthProvider.setUser(user)`, memungkinkan aplikasi berpindah rute secara reaktif tanpa pemanggilan ulang API manual.
-  - `Home REST (Dio)`: Halaman `HomeScreen` dan `ApiService` berbasis Dio tetap utuh dan memuat data pengguna secara normal setelah pengguna terautentikasi.
-- **Penanganan Kesalahan Berbahasa Indonesia:**
-  Memetakan kode kesalahan `FirebaseAuthException`:
-  - `invalid-email`: "Format email tidak valid."
-  - `user-disabled`: "Akun pengguna ini telah dinonaktifkan."
-  - `user-not-found`: "Akun dengan email ini tidak ditemukan. Silakan daftar terlebih dahulu."
-  - `wrong-password`: "Kata sandi salah. Silakan periksa kembali."
-  - `email-already-in-use`: "Email sudah terdaftar. Silakan gunakan email lain atau langsung masuk."
-  - `weak-password`: "Kata sandi terlalu lemah. Gunakan minimal 6 karakter."
-  - `operation-not-allowed`: "Metode autentikasi Email & Password belum diaktifkan di Firebase Console."
-  - `invalid-credential`: "Email atau kata sandi yang Anda masukkan salah."
-  - `network-request-failed`: "Koneksi internet bermasalah. Periksa jaringan Anda."
-  - `too-many-requests`: "Terlalu banyak percobaan gagal. Silakan coba lagi nanti."
-- **Konfigurasi Lingkungan & Troubleshooting:**
-  - `WidgetsFlutterBinding.ensureInitialized()`: Dipanggil sebelum `Firebase.initializeApp()` untuk memastikan binding engine siap.
-  - `Bypass reCAPTCHA Emulator`: `FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true)` untuk kelancaran pengujian di lingkungan emulator.
-  - `minSdkVersion`: Dikonfigurasi minimal 21 pada `android/app/build.gradle.kts` guna mencegah `PlatformException (Channel Error)`.
+```powershell
+flutter doctor -v
+```
 
-### Pertemuan 9 — Testing di Flutter
+## Menjalankan Aplikasi
 
-Pengujian mengikuti piramida testing Flutter dan memisahkan dependensi autentikasi dari business logic agar pengujian berjalan deterministik tanpa Firebase sungguhan.
+Jalankan perintah dari folder utama repositori.
 
-- **Unit test:** menguji serialisasi JSON, round-trip, equality/hashCode, `copyWith`, validasi email/password, dan delegasi repository/provider menggunakan fake service.
-- **Widget test:** menguji render form login, validasi input, feedback login berhasil, dan feedback saat autentikasi gagal.
-- **Menjalankan semua test:** `flutter test`
-- **Menjalankan unit test tertentu:** `flutter test test/unit/auth_validator_test.dart`
-- **Menghasilkan laporan coverage:** `flutter test --coverage`
+### Persiapan
 
-### Pertemuan 10 — Platform Channel
+```powershell
+flutter pub get
+```
 
-Fitur native Android diakses melalui `MethodChannel` bernama `com.example.app/battery`. Halaman Platform Channel tersedia dari tombol di AppBar halaman Catatan setelah pengguna login.
+### Web
 
-- **Native ke Flutter:** mengambil persentase baterai melalui `BatteryManager`; hasil di luar rentang 0–100 ditampilkan sebagai error.
-- **Flutter ke Native:** mengirim pesan dari kolom input ke Toast Android. Latihan `isLong` tersedia melalui pilihan durasi pendek atau panjang; masukkan NIM dan nama sendiri sebagai pesan.
-- **Pengujian:** `flutter test` mencakup mock channel dan interaksi halaman. Untuk menguji implementasi native, jalankan pada emulator/perangkat Android dengan `flutter run -d <id-perangkat>`.
-- **Catatan:** setelah mengubah `MainActivity.kt`, hentikan lalu jalankan ulang aplikasi; hot reload tidak memuat ulang kode native. Channel ini tidak tersedia di browser.
+```powershell
+flutter run -d chrome --web-port 8080
+```
 
----
+Buka `http://localhost:8080` di browser pada komputer yang menjalankan aplikasi.
 
-## Panduan Menjalankan Proyek
+### Android
 
-### Prasyarat Sistem
+Hubungkan perangkat dengan USB debugging aktif atau nyalakan emulator. Lihat ID perangkat, lalu jalankan aplikasi:
 
-- Flutter SDK versi 3.47.4 (Channel stable) atau yang lebih baru
-- Dart SDK versi 3.13.3 atau kompatibel
-- Browser Google Chrome / Microsoft Edge
+```powershell
+flutter devices
+flutter run -d ID_PERANGKAT
+```
 
-### Langkah Eksekusi
+Ganti `ID_PERANGKAT` dengan ID Android yang ditampilkan Flutter. Fitur Platform Channel hanya tersedia pada Android, bukan web.
 
-1. Unduh seluruh dependensi proyek:
+### Membuat APK Android
 
-   ```powershell
-   flutter pub get
-   ```
+```powershell
+flutter build apk --release
+```
 
-2. Jalankan aplikasi pada platform web dengan port terdefinisi:
+APK hasil build berada di:
 
-   ```powershell
-   flutter run -d chrome --web-port 8080
-   ```
+```text
+build\app\outputs\flutter-apk\app-release.apk
+```
 
-   _(Alternatif: Buka proyek pada Visual Studio Code dan tekan tombol **F5**)_.
+Konfigurasi build saat ini masih menggunakan signing debug untuk tipe `release`. Ini dapat digunakan untuk pengujian langsung, tetapi siapkan signing key rilis yang benar sebelum distribusi produksi atau publikasi ke Play Store. Aplikasi yang terpasang tetap memerlukan internet untuk autentikasi dan sinkronisasi Firestore.
 
-   Untuk praktikum Platform Channel, pilih emulator atau perangkat Android:
+## Pengujian dan Analisis
 
-   ```powershell
-   flutter run -d <id-perangkat-android>
-   ```
+Jalankan seluruh test:
 
-3. Buka peramban web pada alamat:
-   `http://localhost:8080`
+```powershell
+flutter test
+```
 
----
+Jalankan test tertentu, misalnya test dialog catatan:
 
-## Spesifikasi Lingkungan Pengembangan
+```powershell
+flutter test test\widget\note_editor_dialog_test.dart
+```
 
-- **Framework:** Flutter 3.47.4 (Channel stable)
-- **Bahasa Pemrograman:** Dart 3.13.3
-- **Editor:** Visual Studio Code
-- **Version Control:** Git & GitHub
+Periksa analisis dan lint Dart:
+
+```powershell
+flutter analyze
+```
+
+Buat laporan coverage:
+
+```powershell
+flutter test --coverage
+```
+
+Test yang tersedia mencakup validasi autentikasi, repository/provider, model pengguna, widget login, widget dialog catatan, layar Platform Channel, dan layanan channel dengan mock.
+
+## Platform Web dan Android
+
+- Web dapat dijalankan di browser dan memiliki konfigurasi PWA di `web/manifest.json`.
+- Platform Channel pada `android/app/src/main/kotlin/com/example/pertemuan_1/MainActivity.kt` menggunakan channel `com.example.app/battery`.
+- Perubahan pada kode Kotlin native memerlukan penghentian dan peluncuran ulang aplikasi; hot reload tidak memuat ulang implementasi native.
+- Web tidak menyediakan channel native Android untuk membaca baterai atau menampilkan Toast.
+
+## Pembaruan README
+
+Setiap penambahan materi atau perubahan fitur perlu disertai pembaruan pada bagian yang relevan di README ini:
+
+1. Tambahkan atau perbarui baris materi dan status pada tabel pertemuan.
+2. Jelaskan perilaku fitur dan batasannya berdasarkan implementasi aktual.
+3. Perbarui struktur kode, prasyarat, konfigurasi, dan instruksi menjalankan aplikasi bila berubah.
+4. Tambahkan atau perbarui instruksi test jika cakupan pengujian bertambah.
+5. Tautkan branch arsip yang benar; jangan menandai materi selesai sebelum implementasi tersedia.
+
+README ini menjelaskan kondisi branch `main`; branch pertemuan digunakan sebagai arsip snapshot praktikum.
