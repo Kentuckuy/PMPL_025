@@ -53,7 +53,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
       }
 
       final authProvider = AuthProvider();
-      final authSubscription = FirebaseAuth.instance.authStateChanges().listen(
+      final authSubscription = authProvider.authStateChanges.listen(
         authProvider.setUser,
       );
 
