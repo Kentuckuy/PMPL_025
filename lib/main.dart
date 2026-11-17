@@ -135,7 +135,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pertemuan 05 - Cloud Firestore Realtime',
+      title: 'NOTE FATHURRAHMAN',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       // Auth Gating: otomatis berpindah antara LoginScreen dan HomeScreen secara reaktif
