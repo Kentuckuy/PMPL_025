@@ -91,6 +91,25 @@ Fokus praktikum pada pertemuan ini adalah merefaktor sistem autentikasi dari dum
   - `Bypass reCAPTCHA Emulator`: `FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true)` untuk kelancaran pengujian di lingkungan emulator.
   - `minSdkVersion`: Dikonfigurasi minimal 21 pada `android/app/build.gradle.kts` guna mencegah `PlatformException (Channel Error)`.
 
+### Pertemuan 9 — Testing di Flutter
+
+Pengujian mengikuti piramida testing Flutter dan memisahkan dependensi autentikasi dari business logic agar pengujian berjalan deterministik tanpa Firebase sungguhan.
+
+- **Unit test:** menguji serialisasi JSON, round-trip, equality/hashCode, `copyWith`, validasi email/password, dan delegasi repository/provider menggunakan fake service.
+- **Widget test:** menguji render form login, validasi input, feedback login berhasil, dan feedback saat autentikasi gagal.
+- **Menjalankan semua test:** `flutter test`
+- **Menjalankan unit test tertentu:** `flutter test test/unit/auth_validator_test.dart`
+- **Menghasilkan laporan coverage:** `flutter test --coverage`
+
+### Pertemuan 10 — Platform Channel
+
+Fitur native Android diakses melalui `MethodChannel` bernama `com.example.app/battery`. Halaman Platform Channel tersedia dari tombol di AppBar halaman Catatan setelah pengguna login.
+
+- **Native ke Flutter:** mengambil persentase baterai melalui `BatteryManager`; hasil di luar rentang 0–100 ditampilkan sebagai error.
+- **Flutter ke Native:** mengirim pesan dari kolom input ke Toast Android. Latihan `isLong` tersedia melalui pilihan durasi pendek atau panjang; masukkan NIM dan nama sendiri sebagai pesan.
+- **Pengujian:** `flutter test` mencakup mock channel dan interaksi halaman. Untuk menguji implementasi native, jalankan pada emulator/perangkat Android dengan `flutter run -d <id-perangkat>`.
+- **Catatan:** setelah mengubah `MainActivity.kt`, hentikan lalu jalankan ulang aplikasi; hot reload tidak memuat ulang kode native. Channel ini tidak tersedia di browser.
+
 ---
 
 ## Panduan Menjalankan Proyek
@@ -116,6 +135,12 @@ Fokus praktikum pada pertemuan ini adalah merefaktor sistem autentikasi dari dum
    ```
 
    _(Alternatif: Buka proyek pada Visual Studio Code dan tekan tombol **F5**)_.
+
+   Untuk praktikum Platform Channel, pilih emulator atau perangkat Android:
+
+   ```powershell
+   flutter run -d <id-perangkat-android>
+   ```
 
 3. Buka peramban web pada alamat:
    `http://localhost:8080`
