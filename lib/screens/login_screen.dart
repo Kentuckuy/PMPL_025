@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
+import 'platform_channel_screen.dart';
 import '../validators/auth_validator.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -239,6 +240,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       : 'Belum punya akun? Daftar di sini',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
+              ),
+              TextButton.icon(
+                key: const ValueKey('platformChannelDemoButton'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const PlatformChannelScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.settings_input_component),
+                label: const Text('Coba Demo Platform Channel'),
               ),
             ],
           ),
