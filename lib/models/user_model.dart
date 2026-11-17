@@ -5,7 +5,7 @@ class UserModel {
   final String lastName;
   final String avatar;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.email,
     required this.firstName,
@@ -24,4 +24,43 @@ class UserModel {
       avatar: json['avatar'] as String? ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'avatar': avatar,
+    };
+  }
+
+  UserModel copyWith({
+    int? id,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? avatar,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      avatar: avatar ?? this.avatar,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserModel &&
+          id == other.id &&
+          email == other.email &&
+          firstName == other.firstName &&
+          lastName == other.lastName &&
+          avatar == other.avatar;
+
+  @override
+  int get hashCode => Object.hash(id, email, firstName, lastName, avatar);
 }
