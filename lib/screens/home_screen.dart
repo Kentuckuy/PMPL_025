@@ -5,6 +5,7 @@ import '../models/note_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/data_provider.dart';
 import '../providers/notes_provider.dart';
+import 'platform_channel_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,7 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _deleteNote(NoteModel note) async {
     try {
-      await Provider.of<NotesProvider>(context, listen: false).deleteNote(note.id);
+      await Provider.of<NotesProvider>(
+        context,
+        listen: false,
+      ).deleteNote(note.id);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -117,23 +121,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       if (note == null) {
-        await Provider.of<NotesProvider>(context, listen: false).addNote(
-          title: title,
-          content: content,
-        );
+        await Provider.of<NotesProvider>(
+          context,
+          listen: false,
+        ).addNote(title: title, content: content);
       } else {
-        await Provider.of<NotesProvider>(context, listen: false).updateNote(
-          id: note.id,
-          title: title,
-          content: content,
-        );
+        await Provider.of<NotesProvider>(
+          context,
+          listen: false,
+        ).updateNote(id: note.id, title: title, content: content);
       }
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            note == null ? 'Catatan baru berhasil dibuat.' : 'Catatan berhasil diperbarui.',
+            note == null
+                ? 'Catatan baru berhasil dibuat.'
+                : 'Catatan berhasil diperbarui.',
           ),
           backgroundColor: Colors.green,
         ),
@@ -155,6 +160,17 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Catatan Saya'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_input_component),
+            tooltip: 'Platform Channel',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const PlatformChannelScreen(),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
@@ -180,7 +196,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
+                      const Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: Colors.redAccent,
+                      ),
                       const SizedBox(height: 12),
                       Text(
                         notesProvider.errorMessage,
@@ -206,9 +226,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.sticky_note_2_outlined, size: 52, color: Colors.grey),
+                          Icon(
+                            Icons.sticky_note_2_outlined,
+                            size: 52,
+                            color: Colors.grey,
+                          ),
                           SizedBox(height: 12),
-                          Text('Belum ada catatan. Tambahkan satu terlebih dahulu.'),
+                          Text(
+                            'Belum ada catatan. Tambahkan satu terlebih dahulu.',
+                          ),
                         ],
                       ),
                     ),
@@ -229,7 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListTile(
                         onTap: () => _showNoteDialog(note: note),
                         title: Text(
-                          note.title.isEmpty ? 'Catatan Tanpa Judul' : note.title,
+                          note.title.isEmpty
+                              ? 'Catatan Tanpa Judul'
+                              : note.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -239,7 +267,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.redAccent,
+                          ),
                           tooltip: 'Hapus catatan',
                           onPressed: () => _deleteNote(note),
                         ),
