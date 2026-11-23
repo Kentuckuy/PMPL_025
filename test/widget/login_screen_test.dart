@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pertemuan_3/providers/auth_provider.dart';
-import 'package:pertemuan_3/repositories/auth_repository.dart';
-import 'package:pertemuan_3/screens/login_screen.dart';
+import 'package:pmpl_025/providers/auth_provider.dart';
+import 'package:pmpl_025/repositories/auth_repository.dart';
+import 'package:pmpl_025/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../support/fake_auth_service.dart';
