@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pertemuan_3/validators/auth_validator.dart';
+import 'package:pmpl_025/validators/auth_validator.dart';
 
 void main() {
   group('AuthValidator.validateEmail', () {
