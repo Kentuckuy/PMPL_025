@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pertemuan_3/services/platform_channel_service.dart';
+import 'package:pmpl_025/services/platform_channel_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
