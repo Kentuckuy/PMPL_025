@@ -15,6 +15,7 @@ Dokumentasi ini mencatat fitur yang benar-benar tersedia di source code dan bran
 | 6 | Cloud Firestore realtime | CRUD catatan dan pembaruan daftar melalui snapshot stream | [Branch pertemuan-6](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-6) |
 | 9 | Pengujian Flutter | Unit test, widget test, serta pengujian dengan fake service dan mock platform channel | [Branch pertemuan-9](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-9) |
 | 10 | Platform Channel | Komunikasi Flutter–Android untuk membaca baterai dan menampilkan Toast native | [Branch pertemuan-10](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-10) |
+| 11 | Build & Deploy Android | Ikon aplikasi, versioning, signing keystore, build APK/AAB, dan instalasi release | [Branch pertemuan-11](https://github.com/Kentuckuy/PMPL_025/tree/pertemuan-11) |
 
 Tabel di atas hanya mencantumkan materi yang memiliki implementasi atau arsip branch di repositori ini. Materi pertemuan lain dapat ditambahkan setelah kode atau dokumentasinya tersedia.
 
@@ -125,6 +126,7 @@ Ganti `ID_PERANGKAT` dengan ID Android yang ditampilkan Flutter. Fitur Platform 
 ### Membuat APK Android
 
 ```powershell
+flutter analyze
 flutter build apk --release
 ```
 
@@ -134,7 +136,57 @@ APK hasil build berada di:
 build\app\outputs\flutter-apk\app-release.apk
 ```
 
-Konfigurasi build saat ini masih menggunakan signing debug untuk tipe `release`. Ini dapat digunakan untuk pengujian langsung, tetapi siapkan signing key rilis yang benar sebelum distribusi produksi atau publikasi ke Play Store. Aplikasi yang terpasang tetap memerlukan internet untuk autentikasi dan sinkronisasi Firestore.
+### Pertemuan 11 — Build & Deploy Android
+
+Implementasi praktikum ini menaikkan versi menjadi `1.0.1+2` (`versionName` `1.0.1`, `versionCode` `2`), menambahkan ikon Android dari `assets/icon/icon.png`, dan mengatur signing release dari `android/key.properties` jika berkas tersebut tersedia.
+
+Identitas Android `com.example.pertemuan_1` sengaja dipertahankan: `namespace`, `applicationId`, package `MainActivity.kt`, dan registrasi di `google-services.json` saat ini saling cocok. Jika identitas aplikasi diganti, daftarkan package baru di Firebase dan perbarui keempat konfigurasi tersebut bersama-sama.
+
+#### Ikon aplikasi
+
+Untuk membuat ulang ikon native Android setelah mengubah aset:
+
+```powershell
+dart run flutter_launcher_icons
+```
+
+Konfigurasi generator ada di `pubspec.yaml`. Ikon sumber berbentuk PNG persegi dan hasilnya disimpan pada resource launcher Android. Bila ikon lama masih terlihat di perangkat, hapus pemasangan aplikasi lalu pasang ulang agar cache launcher dibersihkan.
+
+#### Signing keystore
+
+Keystore adalah kunci privat untuk menandatangani aplikasi. Buat satu kali di PowerShell, simpan di luar repositori, dan amankan salinan cadangannya:
+
+```powershell
+keytool -genkey -v -keystore "$env:USERPROFILE\upload-keystore.jks" -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
+
+Buat `android/key.properties` secara lokal (jangan commit) dengan isi berikut, lalu ganti nilai contoh dan path sesuai keystore:
+
+```properties
+storePassword=password-keystore
+keyPassword=password-kunci
+keyAlias=upload
+storeFile=C:/Users/NamaAnda/upload-keystore.jks
+```
+
+Gradle memuat konfigurasi itu untuk signing release. `android/.gitignore` sudah mengecualikan `key.properties`, `*.jks`, dan `*.keystore`. Tanpa `key.properties`, build release memakai debug signing hanya untuk pengujian lokal dan menampilkan peringatan; jangan unggah atau bagikan artefak tersebut. Kehilangan keystore produksi dapat menghalangi pembaruan aplikasi yang sama.
+
+#### Build, instal, dan distribusi
+
+```powershell
+flutter build apk --release
+flutter build apk --release --split-per-abi
+flutter build appbundle --release
+flutter install --release
+```
+
+- APK universal untuk pengujian/perangkat: `build\app\outputs\flutter-apk\app-release.apk`.
+- APK terpisah per arsitektur: `build\app\outputs\flutter-apk\app-<abi>-release.apk`.
+- App Bundle untuk Google Play: `build\app\outputs\bundle\release\app-release.aab`.
+
+Hubungkan emulator atau perangkat Android sebelum menjalankan `flutter install --release`. Periksa ikon dan aplikasi setelah terpasang. Untuk setiap unggahan baru, naikkan angka setelah `+` pada `version` di `pubspec.yaml`. Google Play menggunakan AAB; alur praktik yang disarankan adalah membuat aplikasi dan listing, unggah AAB ke Internal Testing, lalu promosikan ke Production setelah peninjauan.
+
+Aplikasi yang terpasang tetap memerlukan internet untuk autentikasi dan sinkronisasi Firestore. Untuk distribusi publik, pastikan build ditandatangani dengan keystore rilis yang benar dan jangan gunakan fallback debug signing.
 
 ## Pengujian dan Analisis
 
