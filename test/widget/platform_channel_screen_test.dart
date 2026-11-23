@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pertemuan_3/screens/platform_channel_screen.dart';
-import 'package:pertemuan_3/services/platform_channel_service.dart';
+import 'package:pmpl_025/screens/platform_channel_screen.dart';
+import 'package:pmpl_025/services/platform_channel_service.dart';
 
 class _FakePlatformChannelService extends PlatformChannelService {
   _FakePlatformChannelService({this.batteryLevel = 75});
