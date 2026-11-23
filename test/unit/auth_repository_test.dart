@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pertemuan_3/repositories/auth_repository.dart';
+import 'package:pmpl_025/repositories/auth_repository.dart';
 
 import '../support/fake_auth_service.dart';
 
