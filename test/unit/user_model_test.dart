@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pertemuan_3/models/user_model.dart';
+import 'package:pmpl_025/models/user_model.dart';
 
 void main() {
   group('UserModel', () {
